@@ -37,7 +37,6 @@ const loginController = new LoginController();
  */
 app.use("/apiv1/anuncios", jwtAuth, require("./routes/apiv1/anuncios"));
 app.post("/apiv1/authenticate", loginController.postJWT);
-// app.use("/api/convertphoto", jwtAuth, thumbnailController.index);
 
 // Setup de i18n
 const i18n = require("./lib/i18nConfigure");
@@ -70,7 +69,6 @@ app.use((req, res, next) => {
  */
 app.use("/", require("./routes/index"));
 app.use("/change-locale", require("./routes/change-locale"));
-// app.use("/privado", sessionAuth, require("./routes/privado"));
 app.use("/users", require("./routes/users"));
 
 // Usamos el concepto de controladores

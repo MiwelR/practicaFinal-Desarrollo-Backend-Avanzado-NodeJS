@@ -1,44 +1,33 @@
 # Bootcamp Full Stack Web Developer #
 
 
-## Práctica Final - Módulo: Desarrollo Backend en NodeJS/MongoDB
+## Práctica Final - Módulo: Desarrollo Backend Avanzado en NodeJS/MongoDB
 
-### NodePop
+### NodePop Backend
 
-Esta práctica consiste en desarrollar el API que se ejecutará en el servidor de un servicio de venta de artículos de segunda mano llamado Nodepop.
+La práctica la he realizado sobre el código que creé para la práctica final de Backend con NodeJS/MongoDB (Pulsa el siguiente enlace para ver el repositorio):
 
-El servicio mantiene anuncios de compra o venta de artículos y permite buscar con filtros por varios criterios, por tanto la API incluye los métodos necesarios para esto.
+[https://github.com/MiwelR/practicaFinal-Desarrollo-Backend-NodeJS-MongoDB](https://github.com/MiwelR/practicaFinal-Desarrollo-Backend-NodeJS-MongoDB "Enlace al repositorio de la práctica")
 
-Cada anuncio tiene los siguientes datos:
+Índice de retos obligatorios e implementados en esta práctica:
 
-- Nombre del artículo
-- Estado del artículo: "En Venta" o "Se Compra" (True="En Venta")
-- Precio: Precio del artículo en caso de ser una oferta de venta. En caso de que sea un anuncio de "Se Compra", será el precio que el solicitante estaría dispuesto a pagar.
-- Foto del artículo
-- Tags del anuncio
-
-Operaciones que pueden realizarse en la API:
-
-- Mostrar todos los anuncios
-- Mostrar anuncios con filtros por tag, estado del anuncio (venta o compra), rango de precio (precio min. y precio max.) y nombre de artículo (que empiece por el dato buscado)
-- Creación de anuncios
-- Actualizar anuncios por id
-- Eliminar anuncios por id
-
-El API utilizará base de datos MongoDB. Además del API, contiene una página (frontend) que muestra una lista de anuncios con filtros en su página principal. Obtiene información de la base de datos y los muestra en una página EJS con una lista de anuncios, en la que si ponemos filtros en la URL los aplica. Por ejemplo: http://localhost:3000/?nombre=Bicicleta
+1. Autenticación con JWT
+2. Internacionalización (i18n)
+3. Subida de imagen con tarea en background (realizada con microservicio usando Sharp)
 
 
 ## Instrucciones
 
-Antes de nada debemos usar el siguiente comando para instalar todas las dependencias del proyecto (carpeta "node_modules"):
+### Instalar dependencias del proyecto:
+
+En primer lugar, debemos usar el siguiente comando para instalar todas las dependencias del proyecto, desde 2 ubicaciones:
 
     npm install
 
-### Desarrollo:
+Desde las rutas:
 
-Para arrancar el proyecto en modo desarrollo se usará:
-
-    npm run dev
+1. Carpeta raíz del proyecto
+1. Carpeta "microservices" ubicada dentro de la raíz del proyecto
 
 
 ### Inicializar la base de datos:
@@ -47,77 +36,47 @@ Para inicializar la base de datos con los datos de ejemplo, se ha creado un Scri
 
     npm run install_bd
 
-### Rutas del FRONT:
+> Este proceso creará la base de datos con 2 anuncios y 2 usuarios de prueba:
 
-Para ir a la página principal de la aplicación:
-
-> http://localhost:3000/
-
-Para filtrar los resultados por parametro:
-
-> http://localhost:3000/?parametro=valor
-
-Para filtrar los resultados por parametro ordenados por orden ascendente o descendente:
-
-*Ascendente*
-> http://localhost:3000/?parametro=valor&sort=parametroParaOrdenar
-
-*Descendente*
-> http://localhost:3000/?parametro=valor&sort=-parametroParaOrdenar
+> user@example.com - Contraseña: 1234 / admin@example.com - Contraseña: 1234
 
 
-### Rutas del API:
+### Iniciar proyecto en modo desarrollo:
 
-Para facilitar las pruebas que quieran realizarse a través de POSTMAN, en el proyecto está incluido el fichero "Proyecto Backend Node.js.postman_collection.json" con todas las rutas para poder importarlas en la aplicación de POSTMAN.
+Para arrancar el proyecto en modo desarrollo se usará:
 
-No obstante a continuación se mostrarán todas las rutas disponibles por métodos:
+    npm run dev
 
-**GET:**
 
-Mostrar todos los anuncios:
+### Iniciar microservicio:
 
-> http://localhost:3000/apiv1/anuncios
+Para iniciar el microservicio creado que se encargará de generar un thumbnail de la imagen de cada anuncio subido, se usará:
 
-Mostrar anuncios filtrados por rango de precio (cambiar "/10/150" por el rango deseado):
+    nodemon thumbnailCreation.js
 
-> http://localhost:3000/apiv1/anuncios/10/150
+> Cada thumbnail generado se guardará en la carpeta "public/images/thumbnails"
 
-Mostrar anuncios filtrados por tags (cambiar "lifestyle" por el tag que quiera buscar):
 
-> http://localhost:3000/apiv1/anuncios/?tags=lifestyle
-
-Mostrar anuncios filtrados por nombre (cambiar "Bicicleta" por el nombre a buscar):
-
-> http://localhost:3000/apiv1/anuncios/?nombre=Bicicleta
-
-Mostrar anuncios filtrados por estado del artículo "En Venta" o "Se Compra" (Para buscar "En Venta" dejar "true", para "Se Compra" cambiar a "false"):
-
-> http://localhost:3000/apiv1/anuncios/?venta=true
-
-Si se quiere que los resultados se muestren en orden se puede aplicar a la url un parámetro según si se quiere un orden "ascendente" o "descendente". 
-
-Por ejemplo:
-
-Orden Ascendente - Muestra anuncios con tags "lifestyle" ordenados por precio de forma ascendente:
-
-> http://localhost:3000/apiv1/anuncios/?tags=lifestyle&sort=precio
-
-Orden Descendente - Muestra anuncios con tags "lifestyle" ordenados por precio de forma descendente:
-
-> http://localhost:3000/apiv1/anuncios/?tags=lifestyle&sort=-precio
-
+### Nuevas rutas añadidas/modificadas del API:
 
 **POST:**
 
-> http://localhost:3000/apiv1/anuncios
+Al hacer una petición "POST" a la siguiente ruta con usuario y contraseña, devuelve un TOKEN implementado con JWT para poder usar en la cabecera "Authorization" en el resto de peticiones:
 
-**PUT:**
+> /apiv1/authenticate
 
-> http://localhost:3000/apiv1/anuncios/IDdelAnuncio
+Para poder crear anuncios usando la siguiente petición, añadir el TOKEN en la cabecera "Authorization":
 
-**DELETE:**
+> /apiv1/anuncios
 
-> http://localhost:3000/apiv1/anuncios/IDdelAnuncio
+No hay que olvidar que para realizar correctamente el envío del formulario en la petición habrá que usar "form-data" en el "Body" de la petición e incluir la key "foto" como tipo "file" y como value añadir la imagen que se quiera cargar.
+
+**GET:**
+
+Para poder mostrar los anuncios usando la siguiente petición, añadir el TOKEN en la cabecera "Authorization":
+
+> /apiv1/anuncios
+
 
 
 
