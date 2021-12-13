@@ -18,6 +18,8 @@ La práctica la he realizado sobre el código que creé para la práctica final 
 
 ## Instrucciones
 
+Para el correcto funcionamiento de la aplicación será necesario renombrar el archivo ".env.example" por ".env" y modificar si fuera necesario, los datos de ejemplo proporcionados como variables de entorno.
+
 ### Instalar dependencias del proyecto:
 
 En primer lugar, debemos usar el siguiente comando para instalar todas las dependencias del proyecto, desde 2 ubicaciones:
